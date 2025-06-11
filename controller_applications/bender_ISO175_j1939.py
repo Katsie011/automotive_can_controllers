@@ -1,8 +1,12 @@
+from typing import Dict
 import can
 import struct
+import j1939
+
+type CYCLIC_MESSAGE_TYPE = tuple[function, int]
 
 
-class ISO175Decoder:
+class ISO175_CA(j1939.ControllerApplication):
     """Decoder class for ISO175 device messages following J1939 protocol.
 
     📊 J1939 Signal Table - iso175 Insulation Monitoring Device
@@ -60,18 +64,60 @@ class ISO175Decoder:
 
     """
 
-    def __init__(self):
-        # Source Address of iso175 device (per manual)
-        # This is a fixed address for the Bender ISO175 device
-        self.source_address = 0xF4
+    def __init__(self, name, device_address_preferred=None) -> None:
+        # Initialize decoders dictionary
         self.decoders = {
             65281: self.decode_pgn_65281,
             65282: self.decode_pgn_65282,
             65283: self.decode_pgn_65283,
             65284: self.decode_pgn_65284,
         }
+        # Source Address of iso175 device (per manual)
+        # This is a fixed address for the Bender ISO175 device
+        self.source_address = 0xF4
 
-    def decode(self, pgn: int, data: bytes) -> bool:
+        # Initialize cyclic message functions dictionary
+        self.cyclic_message_functions: Dict[int, CYCLIC_MESSAGE_TYPE] = {}
+
+        # Initialize storage for decoded values
+        self.general_info = {}
+        self.isolation_detail = {}
+        self.voltage_info = {}
+        self.it_system_info = {}
+
+        # Call parent class constructor
+        j1939.ControllerApplication.__init__(self, name, device_address_preferred)
+
+    def start(self):
+        """Starts the Controller Application."""
+        return j1939.ControllerApplication.start(self)
+
+    def stop(self):
+        """Stops the Controller Application."""
+        return j1939.ControllerApplication.stop(self)
+
+    def on_message(self, pgn, data):
+        """Handle incoming messages.
+
+        Args:
+            pgn: Parameter Group Number of the message
+            data: Data of the PDU
+        """
+        print(f"PGN {pgn} length {len(data)}")
+
+        # Try to decode the message
+        if pgn in self.decoders:
+            result = self.decode(pgn, data)
+            # Print the decoded information if successful
+            if isinstance(result, dict):
+                if "error" not in result:
+                    print(f"\nDecoded PGN {pgn}:")
+                else:
+                    print("Could not decode the message!")
+                for key, value in result.items():
+                    print(f"  {key}: {value}")
+
+    def decode(self, pgn: int, data: bytes):
         """Decode a message based on its PGN.
 
         Args:
@@ -82,21 +128,18 @@ class ISO175Decoder:
             bool: True if message was decoded successfully, False otherwise
         """
         decoder = self.decoders.get(pgn)
-        if decoder is not None:
-            return decoder(data)
-        print(f"PGN: {pgn} not found!")
-        return False
+        return decoder(data) if decoder else {"error": f"No decoder for PGN {pgn}"}
 
-    def decode_pgn_65281(self, data: bytes) -> bool:
+    def decode_pgn_65281(self, data: bytes):
         """Decode PGN 65281 - General Info containing device status and measurements."""
         try:
             # Unpack 16-bit values using little-endian format (<H)
             r_iso_corr = struct.unpack_from("<H", data[:2])[
                 0
             ]  # Corrected isolation resistance
-            r_iso_status = data[2]  # Status byte for isolation measurement
-            meas_count = data[3]  # Counter for measurements
-            alarms = struct.unpack_from("<H", data[4:6])[
+            r_iso_status: int = data[2]  # Status byte for isolation measurement
+            meas_count: int = data[3]  # Counter for measurements
+            alarms: int = struct.unpack_from("<H", data[4:6])[
                 0
             ]  # Bitfield containing alarm states
             device_state = data[6]  # Current state of the device
@@ -122,12 +165,12 @@ class ISO175Decoder:
                     else "Unknown"
                 ),
             }
-            return True
+            return self.general_info
         except Exception as e:
             print(f"Error decoding PGN 65281: {e}")
             return False
 
-    def decode_pgn_65282(self, data: bytes) -> bool:
+    def decode_pgn_65282(self, data: bytes):
         """Decode PGN 65282 - Isolation Detail containing detailed isolation measurements."""
         try:
             # Extract isolation resistance values (in kΩ)
@@ -145,12 +188,12 @@ class ISO175Decoder:
                 "measurement_count": iso_measurement_count,
                 "measurement_quality": iso_measurement_quality,
             }
-            return True
+            return self.isolation_detail
         except Exception as e:
             print(f"Error decoding PGN 65282: {e}")
             return False
 
-    def decode_pgn_65283(self, data: bytes) -> bool:
+    def decode_pgn_65283(self, data: bytes):
         """Decode PGN 65283 - Voltage Info containing high voltage system measurements."""
         try:
             # Convert raw values to voltage (V)
@@ -164,12 +207,12 @@ class ISO175Decoder:
                 "hv_negative_to_earth": hv_neg,
                 "hv_positive_to_earth": hv_pos,
             }
-            return True
+            return self.voltage_info
         except Exception as e:
             print(f"Error decoding PGN 65283: {e}")
             return False
 
-    def decode_pgn_65284(self, data: bytes) -> bool:
+    def decode_pgn_65284(self, data: bytes):
         """Decode PGN 65284 - IT-System Info containing system capacitance measurements."""
         try:
             # Extract measurements
@@ -190,38 +233,35 @@ class ISO175Decoder:
                 "unbalance_measurement": unbalance_measurement,
                 "voltage_frequency": voltage_frequency,
             }
-            return True
+            return self.it_system_info
         except Exception as e:
             print(f"Error decoding PGN 65284: {e}")
             return False
 
 
 if __name__ == "__main__":
-    # Configure CAN interface with 500 kbps bitrate
-    bus = can.interface.Bus(channel="can0", bustype="socketcan", bitrate=500000)
-    iso175 = ISO175Decoder()
-    print("Listening to CAN bus... Press Ctrl+C to stop.\n")
+    import time
+
+    # Create the ElectronicControlUnit
+    ecu = j1939.ElectronicControlUnit()
+
+    # Connect to the CAN bus
+    ecu.connect(bustype="socketcan", channel="can0", bitrate=500000)
+
+    # Create and add the ISO175 controller application
+    iso175 = ISO175_CA("ISO175")
+    ecu.add_ca(controller_application=iso175)
 
     try:
-        while True:
-            msg = bus.recv()
-
-            # Skip non-extended ID messages
-            if msg is None or msg.is_extended_id is False:
-                continue
-
-            # Extract message components
-            can_id = msg.arbitration_id
-            data = msg.data
-            pgn = (can_id >> 8) & 0xFFFF  # Extract PGN from CAN ID
-            sa = can_id & 0xFF  # Extract Source Address
-
-            # Only process messages from our device
-            if iso175.source_address != sa:
-                continue
-
-            # Route message to appropriate decoder based on PGN
-            iso175.decode(pgn=pgn, data=data)
-
+        iso175.start()
+        print("Listening to CAN bus... Press Ctrl+C to stop.\n")
+        time.sleep(120)  # Run for 2 minutes
     except KeyboardInterrupt:
-        print("\nStopped.")
+        print("\nUser Stopped.")
+    finally:
+        iso175.stop()
+        ecu.disconnect()
+
+# 400 fte
+# 250 engieers
+# 2.5 years development timeline for prototype
