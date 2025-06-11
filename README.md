@@ -24,17 +24,20 @@ Hope it helps! 🙏
 2. install the requirements
 
 ```bash
-# TODO
+    pip install requirements.txt
 ```
 
 3. Clone the repo
 
 ```bash
-# TODO
+    gh repo clone Katsie011/automotive_can_controllers
 ```
 
 4. Run the controller you need!
-See the example for help.
+```bash
+python controller_applications/bender_ISO175_j1939.py
+```
+See the examples at the end of each controller application for help.
 
 
 ## Structure of the repo
