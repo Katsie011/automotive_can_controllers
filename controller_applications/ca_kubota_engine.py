@@ -39,7 +39,47 @@ class Kubota_D902k_CA(j1939.ControllerApplication):
             65265: (self.timer_callback_65265, 100)
         }
 
-        super().__init__(name, device_address_preferred)
+        # old fashion calling convention for compatibility with Python2
+        j1939.ControllerApplication.__init__(self, name, device_address_preferred)
+
+    def start(self):
+        """Starts the CA
+        (OVERLOADED function)
+        """
+        # add our timer event
+        if self._ecu is not None:
+            self._ecu.add_timer(0.100, self.timer_callback_65265)
+        # call the super class function
+        return j1939.ControllerApplication.start(self)
+
+    def stop(self):
+        """Stops the CA
+        (OVERLOADED function)
+        """
+        if self._ecu is not None:
+            self._ecu.remove_timer(self.timer_callback_65265)
+
+    def on_message(self, pgn, data):
+        """Feed incoming message to this CA.
+        (OVERLOADED function)
+        :param int pgn:
+            Parameter Group Number of the message
+        :param bytearray data:
+            Data of the PDU
+        """
+        print("PGN {} length {}".format(pgn, len(data)))
+
+        # Try to decode the message
+        if pgn in self.decoders.keys():
+            result = kubota.decode(pgn, data)
+            # Print the decoded information if successful
+            if type(result) == dict:
+                if "error" not in result:
+                    print(f"\nDecoded PGN {pgn}:")
+                else:
+                    print("Could not decode the message!")
+                for key, value in result.items():
+                    print(f"  {key}: {value}")
 
     def decode(self, pgn, data):
         """Dispatch decoder based on PGN."""
@@ -93,9 +133,6 @@ class Kubota_D902k_CA(j1939.ControllerApplication):
     def set_vehicle_speed_65265(self, km_hr: float):
         """Transmit vehicle speed"""
         self.vehicle_speed = int(km_hr / 250.996)
-        priority = 6
-        rate_ms = 100
-        raise NotImplementedError
         # CCVS	18FEF1VA*	65265	2-3	2 bytes	84	Vehicle Speed		X	6	100	0 to 250.996 km/h, 1/256 km/h per bit, 0 offset
 
     def timer_callback_65265(self, cookie):
@@ -181,3 +218,36 @@ class Kubota_D902k_CA(j1939.ControllerApplication):
 
 
 # struct.unpack assumes little endian and uses <H for unsigned short, <I for unsigned int
+
+
+if __name__ == "__main__":
+    import time
+
+    # create the ElectronicControlUnit (one ECU can hold multiple ControllerApplications)
+    ecu = j1939.ElectronicControlUnit()
+
+    # Connect to the CAN bus
+    # and configure CAN interface with 500 kbps bitrate
+    # Arguments are passed to python-can's can.interface.Bus() constructor
+    # (see https://python-can.readthedocs.io/en/stable/bus.html).
+    ecu.connect(bustype="socketcan", channel="can0")
+
+    # ecu.connect(bustype='kvaser', channel=0, bitrate=500000)
+    # ecu.connect(bustype='pcan', channel='PCAN_USBBUS1', bitrate=500000)
+    # ecu.connect(bustype='ixxat', channel=0, bitrate=500000)
+    # ecu.connect(bustype='vector', app_name='CANalyzer', channel=0, bitrate=500000)
+    # ecu.connect(bustype='nican', channel='CAN0', bitrate=500000)
+
+    kubota = Kubota_D902k_CA("KubotaD902K")
+    ecu.add_ca(controller_application=kubota)
+
+    try:
+        kubota.start()
+        print("Listening to CAN bus... Press Ctrl+C to stop.\n")
+        time.sleep(120)
+    except KeyboardInterrupt:
+        print("\nUser Stopped.")
+    finally:
+        print("Deinitializing")
+        kubota.stop()
+        ecu.disconnect()
