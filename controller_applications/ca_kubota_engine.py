@@ -1,3 +1,4 @@
+from enum import Enum
 import struct
 from typing import Dict
 import j1939
@@ -13,6 +14,23 @@ import j1939
 # Type for the cyclic messages returned by the class.
 ## For python 3.12:
 type CYCLIC_MESSAGE_TYPE = tuple[function, int]
+
+# CONSTANTS
+BITS_PER_LITRE_FUEL = 0.05  # 0.05 L/h per bit
+
+
+"""0000: start not requested
+0010: starter active (gear engaged)
+0100: starter inhibited due to engine already running
+1100: starter inhibited
+Other status are not supported
+"""
+ENGINE_STARTER_MODE = {
+    0b0000: "START_NOT_REQUESTED",
+    0b0010: "STARTER ACTIVE",
+    0b0100: "START INHIBITED - ENGINE ALREADY RUNNING",
+    0b1100: "START INHIBITED ",
+}
 
 
 class Kubota_D902k_CA(j1939.ControllerApplication):
@@ -88,19 +106,21 @@ class Kubota_D902k_CA(j1939.ControllerApplication):
 
     def decode_61444(self, data):
         """EEC1 - Engine Speed, Torque, Starter Mode, etc."""
-        engine_speed = struct.unpack_from("<H", data, 3)[0] * 0.125
         demand_torque = data[1] - 125
         actual_torque = data[2] - 125
-        starter_mode = (
-            data[6] & 0xF0
-        ) >> 4  # TODO: Not convinced this is right. Needs to be checked
+        engine_speed = self._bits_to_engine_speed(struct.unpack_from("<H", data, 3)[0])
         tsc1_src_address = data[5]
+        # starter_mode = (
+        #     data[6] & 0xF0
+        # ) >> 4  # TODO: Not convinced this is right. Needs to be checked
+        starter_mode = data[6]
         return {
             "PGN": 61444,
             "Engine Speed (RPM)": engine_speed,
             "Driver's Demand Torque (%)": demand_torque,
             "Actual Engine Torque (%)": actual_torque,
             "Starter Mode": starter_mode,
+            "Starter Message": ENGINE_STARTER_MODE.get(starter_mode, "STATUS UNKNOWN"),
             "TSC1 Source Address": tsc1_src_address,
         }
 
@@ -215,6 +235,34 @@ class Kubota_D902k_CA(j1939.ControllerApplication):
             "Wait to Start Lamp": wait_to_start,
             "Shutdown Active": shutdown,
         }
+
+    def _engine_speed_to_bits(self, speed: float) -> int:
+        """0 to 8031.875 rpm, 0.125 rpm/bit, 0 offset"""
+        return int(speed / 0.125)
+
+    def _bits_to_engine_speed(self, bits: int) -> float:
+        """0 to 8031.875 rpm, 0.125 rpm/bit, 0 offset"""
+        return bits * 0.125
+
+    def _fuel_rate_litres_to_bits(self, litres: float) -> int:
+        """0 to 3212.75 L/h, 0.05 L/h per bit, 0 offset"""
+        if litres < 0 or litres > 3212.75:
+            raise ValueError(
+                f"Fuel rate must be between 0 and 3212.75 L/h, got {litres}"
+            )
+
+        return int(litres / BITS_PER_LITRE_FUEL)
+        return bits * 0.125
+
+    def _fuel_rate_bits_to_litres(self, bits: int) -> float:
+        """0 to 3212.75 L/h, 0.05 L/h per bit, 0 offset"""
+        litres = bits * 0.05
+        if litres < 0 or litres > 3212.75:
+            raise ValueError(
+                f"Fuel rate must be between 0 and 3212.75 L/h, got the equivalent of {litres}"
+            )
+
+        return litres
 
 
 # struct.unpack assumes little endian and uses <H for unsigned short, <I for unsigned int
