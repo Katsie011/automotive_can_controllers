@@ -50,8 +50,7 @@ class IVTSensor:
         self.logger.setLevel(logging.DEBUG)
         self.running = False
         self.results = {}
-        self.decoders = {mux_id: self._decode_mux for mux_id in self.RESULT_IDS}
-        self.mode: Mode = Mode.RESET
+        self.mode = Mode.RESET
 
     def start(self):
         self.bus = can.interface.Bus(
@@ -80,14 +79,16 @@ class IVTSensor:
             self.logger.debug(f"Received response: {msg}")
 
     def on_message(self, pgn, data):
-        if pgn in self.decoders:
-            result = self.decode(pgn, data)
-            if isinstance(result, dict):
-                self.logger.debug(f"Decoded result from PGN {pgn}: {result}")
+        self.logger.debug(f"Recieved the following message for ID {pgn}:\n{data}")
+        result = self.decode(pgn, data)
+        if isinstance(result, dict):
+            self.logger.debug(f"Decoded result from PGN {pgn}: {result}")
 
     def decode(self, pgn: int, data: bytes):
-        decoder = self.decoders.get(pgn)
-        return decoder(data) if decoder else {"error": f"No decoder for PGN/Mux {pgn}"}
+        if pgn in self.RESULT_IDS.keys():
+            return self._decode_mux(data)
+        else:
+            return {"error": f"No decoder for PGN/Mux {pgn}"}
 
     def _decode_mux(self, data: bytes):
         if len(data) != 6:
