@@ -27,7 +27,7 @@ class IVTSensor:
 
     BASE_ID = 0x521  # Start of result messages (I, U1, U2, ...)
 
-    RESULT_IDS = {
+    MESSAGE_IDS = {
         0x00: ("current", "mA"),
         0x01: ("voltage_u1", "mV"),
         0x02: ("voltage_u2", "mV"),
@@ -37,12 +37,14 @@ class IVTSensor:
         0x06: ("coulomb_count", "As"),
         0x07: ("energy_count", "Wh"),
     }
-    MAX_ID = max(RESULT_IDS.keys())
+    MAX_ID = max(MESSAGE_IDS.keys())
 
     CMD_ID = 0x411
     RESP_ID = 0x511
 
-    def __init__(self, name="IVT", channel="can0", bitrate=500000, logger=None):
+    def __init__(
+        self, name="IVT", channel="can0", bitrate=500000, logger=None, bus=None
+    ):
         self.name = name
         self.channel = channel
         self.bitrate = bitrate
@@ -51,11 +53,15 @@ class IVTSensor:
         self.running = False
         self.results = {}
         self.mode = Mode.RESET
+        self.bus = (
+            bus
+            if bus is not None
+            else can.interface.Bus(
+                channel=self.channel, bustype="socketcan", bitrate=self.bitrate
+            )
+        )
 
     def start(self):
-        self.bus = can.interface.Bus(
-            channel=self.channel, bustype="socketcan", bitrate=self.bitrate
-        )
         self.running = True
         # TODO: Check if this works:
         self.notifier = can.Notifier(self.bus, [self._on_can_message])
@@ -85,7 +91,7 @@ class IVTSensor:
             self.logger.debug(f"Decoded result from PGN {pgn}: {result}")
 
     def decode(self, pgn: int, data: bytes):
-        if pgn in self.RESULT_IDS.keys():
+        if pgn in self.MESSAGE_IDS.keys():
             return self._decode_mux(data)
         else:
             return {"error": f"No decoder for PGN/Mux {pgn}"}
@@ -100,7 +106,7 @@ class IVTSensor:
         state_bits = (data[1] >> 4) & 0x0F
         raw_val = int.from_bytes(data[2:6], byteorder="big", signed=True)
 
-        label, unit = self.RESULT_IDS[mux_id]
+        label, unit = self.MESSAGE_IDS[mux_id]
         value = raw_val / 10.0 if unit == "0.1C" else raw_val
         self.results[label] = value
 

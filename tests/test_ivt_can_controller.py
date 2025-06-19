@@ -31,7 +31,7 @@ def test_initialization_ivtsensor(ivt_sensor):
     assert ivt_sensor.mode == Mode.RESET
     assert not ivt_sensor.running
     assert isinstance(ivt_sensor.results, dict)
-    assert 0x00 in ivt_sensor.RESULT_IDS.keys()
+    assert 0x00 in ivt_sensor.MESSAGE_IDS.keys()
 
 
 def test_start_method(ivt_sensor):
