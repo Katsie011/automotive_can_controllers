@@ -29,6 +29,7 @@ class Kubota_D902k_CA(j1939.ControllerApplication):
     BITS_PER_VOLT_BATTERY_POTENTIAL = 0.05  #  0.05V/bit
     BITS_PER_KPA_BAROMETRIC_PRESSURE = 0.5  # 0.5 kPa/bit
     BITS_PER_LITRE_TOTAL_FUEL_USED = 0.5  # 0.5 L/bit
+    PGN_TRANSMIT_VEHICLE_SPEED = 65265  # pgn  for the vehicle speed.
 
     """0000: start not requested
     0010: starter active (gear engaged)
@@ -177,8 +178,6 @@ class Kubota_D902k_CA(j1939.ControllerApplication):
             # returning true keeps the timer event active
             return True
 
-        pgn = 65265  # pgn  for the vehicle speed.
-
         # Alternatively, this works:
         # pgn = j1939.ParameterGroupNumber(
         #     0, # data_page
@@ -186,7 +185,7 @@ class Kubota_D902k_CA(j1939.ControllerApplication):
         # 65265, # pdu_specific
         # )
 
-        self.send_message(6, pgn, self.vehicle_speed)
+        self.send_message(6, self.PGN_TRANSMIT_VEHICLE_SPEED, self.vehicle_speed)
 
         # returning true keeps the timer event active
         return True
