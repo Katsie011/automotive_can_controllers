@@ -1,5 +1,3 @@
-MESSAGE_ID_VMU_STATS = 2566864926
-
 from dataclasses import dataclass
 
 
@@ -10,6 +8,8 @@ class BmsVmuStats:
      SG_ CounterDischarge : 32|32@1+ (0.01,0) [0|4.29497e+007] "Ah" Vector__XXX
      SG_ CounterCharge : 0|32@1+ (0.01,0) [0|4.29497e+007] "Ah" Vector__XXX
     """
+
+    MESSAGE_ID = 2566864926
 
     NUM_BYTES = 8
     counter_discharge: int  # raw value, multiply by 0.01 for Ah

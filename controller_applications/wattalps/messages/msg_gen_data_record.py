@@ -1,8 +1,5 @@
 from dataclasses import dataclass
 
-# VMU_BMS_GEN_DATA_RECORD_1
-MESSAGE_ID_GEN_DATA_RECORD_1 = 2180980736
-
 
 @dataclass
 class VmuBmsGenDataRecord1:
@@ -12,6 +9,8 @@ class VmuBmsGenDataRecord1:
      SG_ GenRecordValue1 : 0|32@1- (1,0) [2.14748e+009|-2.14748e+009] "" Vector__XXX
     """
 
+    # VMU_BMS_GEN_DATA_RECORD_1
+    MESSAGE_ID_GEN_DATA_RECORD_1 = 2180980736
     NUM_BYTES = 8
     gen_record_value1: int
     gen_record_value2: int
@@ -38,10 +37,6 @@ def encode_gen_data_record_1(msg: VmuBmsGenDataRecord1) -> bytes:
     return bytes(data)
 
 
-# VMU_BMS_GEN_DATA_RECORD_2
-MESSAGE_ID_GEN_DATA_RECORD_2 = 2180980992
-
-
 @dataclass
 class VmuBmsGenDataRecord2:
     """
@@ -50,6 +45,8 @@ class VmuBmsGenDataRecord2:
      SG_ GenRecordValue3 : 0|32@1- (1,0) [2.14748e+009|-2.14748e+009] "" Vector__XXX
     """
 
+    # VMU_BMS_GEN_DATA_RECORD_2
+    MESSAGE_ID_GEN_DATA_RECORD_2 = 2180980992
     NUM_BYTES = 8
     gen_record_value3: int
     gen_record_value4: int
@@ -76,10 +73,6 @@ def encode_gen_data_record_2(msg: VmuBmsGenDataRecord2) -> bytes:
     return bytes(data)
 
 
-# VMU_BMS_GEN_DATA_RECORD_3
-MESSAGE_ID_GEN_DATA_RECORD_3 = 2180981248
-
-
 @dataclass
 class VmuBmsGenDataRecord3:
     """
@@ -88,6 +81,8 @@ class VmuBmsGenDataRecord3:
      SG_ GenRecordValue5 : 0|32@1- (1,0) [2.14748e+009|-2.14748e+009] "" Vector__XXX
     """
 
+    # VMU_BMS_GEN_DATA_RECORD_3
+    MESSAGE_ID_GEN_DATA_RECORD_3 = 2180981248
     NUM_BYTES = 8
     gen_record_value5: int
     gen_record_value6: int

@@ -1,6 +1,5 @@
-MESSAGE_ID_BMS_VMU_FAILURE = 2566852638
-
 from dataclasses import dataclass
+
 
 @dataclass
 class BmsVmuFailure:
@@ -49,6 +48,8 @@ class BmsVmuFailure:
      SG_ ExternalCommunication : 1|1@1- (1,0) [0|1] "" Vector__XXX
      SG_ Safety_Generic : 0|1@1- (1,0) [0|1] "" Vector__XXX
     """
+
+    MESSAGE_ID = 2566852638
     NUM_BYTES = 8
     safety_reserved: int
     safety_appl_comm: bool
@@ -93,134 +94,135 @@ class BmsVmuFailure:
     external_communication: bool
     safety_generic: bool
 
+
 def decode_bms_vmu_failure(data: bytes) -> BmsVmuFailure:
     assert len(data) == BmsVmuFailure.NUM_BYTES
 
     # SG_ Safety_Reserved : 61|3@1+ (1,0) [0|0] "" Vector__XXX
-    safety_reserved = (int.from_bytes(data, 'big') >> 61) & 0x07
+    safety_reserved = (int.from_bytes(data, "big") >> 61) & 0x07
 
     # SG_ Safety_ApplComm : 60|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_appl_comm = (int.from_bytes(data, 'big') >> 60) & 0x01
+    safety_appl_comm = (int.from_bytes(data, "big") >> 60) & 0x01
 
     # SG_ Safety_JunctionBoxTemperature : 59|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_junction_box_temperature = (int.from_bytes(data, 'big') >> 59) & 0x01
+    safety_junction_box_temperature = (int.from_bytes(data, "big") >> 59) & 0x01
 
     # SG_ Safety_ContextAlim : 58|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_context_alim = (int.from_bytes(data, 'big') >> 58) & 0x01
+    safety_context_alim = (int.from_bytes(data, "big") >> 58) & 0x01
 
     # SG_ Safety_Vpack : 57|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_vpack = (int.from_bytes(data, 'big') >> 57) & 0x01
+    safety_vpack = (int.from_bytes(data, "big") >> 57) & 0x01
 
     # SG_ Safety_CurrSensor : 56|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_curr_sensor = (int.from_bytes(data, 'big') >> 56) & 0x01
+    safety_curr_sensor = (int.from_bytes(data, "big") >> 56) & 0x01
 
     # SG_ Safety_TempSensor : 55|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_temp_sensor = (int.from_bytes(data, 'big') >> 55) & 0x01
+    safety_temp_sensor = (int.from_bytes(data, "big") >> 55) & 0x01
 
     # SG_ Safety_VoltSensor : 54|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_volt_sensor = (int.from_bytes(data, 'big') >> 54) & 0x01
+    safety_volt_sensor = (int.from_bytes(data, "big") >> 54) & 0x01
 
     # SG_ Safety_Hvil : 53|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_hvil = (int.from_bytes(data, 'big') >> 53) & 0x01
+    safety_hvil = (int.from_bytes(data, "big") >> 53) & 0x01
 
     # SG_ Safety_EmergencyStop : 52|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_emergency_stop = (int.from_bytes(data, 'big') >> 52) & 0x01
+    safety_emergency_stop = (int.from_bytes(data, "big") >> 52) & 0x01
 
     # SG_ Safety_CommAuxShunt : 51|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_comm_aux_shunt = (int.from_bytes(data, 'big') >> 51) & 0x01
+    safety_comm_aux_shunt = (int.from_bytes(data, "big") >> 51) & 0x01
 
     # SG_ Safety_SlaveMaxim : 50|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_slave_maxim = (int.from_bytes(data, 'big') >> 50) & 0x01
+    safety_slave_maxim = (int.from_bytes(data, "big") >> 50) & 0x01
 
     # SG_ Safety_SlaveMeasTimeout : 49|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_slave_meas_timeout = (int.from_bytes(data, 'big') >> 49) & 0x01
+    safety_slave_meas_timeout = (int.from_bytes(data, "big") >> 49) & 0x01
 
     # SG_ Safety_SlaveId : 48|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_slave_id = (int.from_bytes(data, 'big') >> 48) & 0x01
+    safety_slave_id = (int.from_bytes(data, "big") >> 48) & 0x01
 
     # SG_ Safety_SlaveNumber : 47|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_slave_number = (int.from_bytes(data, 'big') >> 47) & 0x01
+    safety_slave_number = (int.from_bytes(data, "big") >> 47) & 0x01
 
     # SG_ Safety_SlaveComm : 46|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_slave_comm = (int.from_bytes(data, 'big') >> 46) & 0x01
+    safety_slave_comm = (int.from_bytes(data, "big") >> 46) & 0x01
 
     # SG_ Safety_SlaveSpiComm : 45|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_slave_spi_comm = (int.from_bytes(data, 'big') >> 45) & 0x01
+    safety_slave_spi_comm = (int.from_bytes(data, "big") >> 45) & 0x01
 
     # SG_ Safety_Config : 44|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_config = (int.from_bytes(data, 'big') >> 44) & 0x01
+    safety_config = (int.from_bytes(data, "big") >> 44) & 0x01
 
     # SG_ Safety_Contactor : 43|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_contactor = (int.from_bytes(data, 'big') >> 43) & 0x01
+    safety_contactor = (int.from_bytes(data, "big") >> 43) & 0x01
 
     # SG_ Safety_Oil : 42|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_oil = (int.from_bytes(data, 'big') >> 42) & 0x01
+    safety_oil = (int.from_bytes(data, "big") >> 42) & 0x01
 
     # SG_ Safety_Curmax60s : 41|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_curmax60s = (int.from_bytes(data, 'big') >> 41) & 0x01
+    safety_curmax60s = (int.from_bytes(data, "big") >> 41) & 0x01
 
     # SG_ Safety_Curmax30s : 40|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_curmax30s = (int.from_bytes(data, 'big') >> 40) & 0x01
+    safety_curmax30s = (int.from_bytes(data, "big") >> 40) & 0x01
 
     # SG_ Safety_Curmax10s : 39|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_curmax10s = (int.from_bytes(data, 'big') >> 39) & 0x01
+    safety_curmax10s = (int.from_bytes(data, "big") >> 39) & 0x01
 
     # SG_ Safety_Curmax5s : 38|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_curmax5s = (int.from_bytes(data, 'big') >> 38) & 0x01
+    safety_curmax5s = (int.from_bytes(data, "big") >> 38) & 0x01
 
     # SG_ Safety_Curmax2s : 37|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_curmax2s = (int.from_bytes(data, 'big') >> 37) & 0x01
+    safety_curmax2s = (int.from_bytes(data, "big") >> 37) & 0x01
 
     # SG_ Safety_VoltImbalance : 36|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_volt_imbalance = (int.from_bytes(data, 'big') >> 36) & 0x01
+    safety_volt_imbalance = (int.from_bytes(data, "big") >> 36) & 0x01
 
     # SG_ Safety_Voltmin : 35|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_voltmin = (int.from_bytes(data, 'big') >> 35) & 0x01
+    safety_voltmin = (int.from_bytes(data, "big") >> 35) & 0x01
 
     # SG_ Safety_Voltmax : 34|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_voltmax = (int.from_bytes(data, 'big') >> 34) & 0x01
+    safety_voltmax = (int.from_bytes(data, "big") >> 34) & 0x01
 
     # SG_ Safety_TempImbalance : 33|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_temp_imbalance = (int.from_bytes(data, 'big') >> 33) & 0x01
+    safety_temp_imbalance = (int.from_bytes(data, "big") >> 33) & 0x01
 
     # SG_ Safety_TempmaxMod : 32|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_tempmax_mod = (int.from_bytes(data, 'big') >> 32) & 0x01
+    safety_tempmax_mod = (int.from_bytes(data, "big") >> 32) & 0x01
 
     # SG_ Reserved : 11|21@1+ (1,0) [0|0] "" Vector__XXX
-    reserved = (int.from_bytes(data, 'big') >> 11) & 0x1FFFFF
+    reserved = (int.from_bytes(data, "big") >> 11) & 0x1FFFFF
 
     # SG_ CurmaxFuse : 10|1@1- (1,0) [0|1] "" Vector__XXX
-    curmax_fuse = (int.from_bytes(data, 'big') >> 10) & 0x01
+    curmax_fuse = (int.from_bytes(data, "big") >> 10) & 0x01
 
     # SG_ Charger : 9|1@1- (1,0) [0|1] "" Vector__XXX
-    charger = (int.from_bytes(data, 'big') >> 9) & 0x01
+    charger = (int.from_bytes(data, "big") >> 9) & 0x01
 
     # SG_ InternalTemperature : 8|1@1- (1,0) [0|1] "" Vector__XXX
-    internal_temperature = (int.from_bytes(data, 'big') >> 8) & 0x01
+    internal_temperature = (int.from_bytes(data, "big") >> 8) & 0x01
 
     # SG_ InternalPowerAlimentation : 7|1@1- (1,0) [0|1] "" Vector__XXX
-    internal_power_alimentation = (int.from_bytes(data, 'big') >> 7) & 0x01
+    internal_power_alimentation = (int.from_bytes(data, "big") >> 7) & 0x01
 
     # SG_ PrechargeContactor : 6|1@1- (1,0) [0|1] "" Vector__XXX
-    precharge_contactor = (int.from_bytes(data, 'big') >> 6) & 0x01
+    precharge_contactor = (int.from_bytes(data, "big") >> 6) & 0x01
 
     # SG_ Contactor : 5|1@1- (1,0) [0|1] "" Vector__XXX
-    contactor = (int.from_bytes(data, 'big') >> 5) & 0x01
+    contactor = (int.from_bytes(data, "big") >> 5) & 0x01
 
     # SG_ Config : 4|1@1- (1,0) [0|1] "" Vector__XXX
-    config = (int.from_bytes(data, 'big') >> 4) & 0x01
+    config = (int.from_bytes(data, "big") >> 4) & 0x01
 
     # SG_ AuxShunt : 3|1@1- (1,0) [0|1] "" Vector__XXX
-    aux_shunt = (int.from_bytes(data, 'big') >> 3) & 0x01
+    aux_shunt = (int.from_bytes(data, "big") >> 3) & 0x01
 
     # SG_ uCCommunication : 2|1@1- (1,0) [0|1] "" Vector__XXX
-    uc_communication = (int.from_bytes(data, 'big') >> 2) & 0x01
+    uc_communication = (int.from_bytes(data, "big") >> 2) & 0x01
 
     # SG_ ExternalCommunication : 1|1@1- (1,0) [0|1] "" Vector__XXX
-    external_communication = (int.from_bytes(data, 'big') >> 1) & 0x01
+    external_communication = (int.from_bytes(data, "big") >> 1) & 0x01
 
     # SG_ Safety_Generic : 0|1@1- (1,0) [0|1] "" Vector__XXX
-    safety_generic = (int.from_bytes(data, 'big') >> 0) & 0x01
+    safety_generic = (int.from_bytes(data, "big") >> 0) & 0x01
 
     return BmsVmuFailure(
         safety_reserved=safety_reserved,
@@ -266,6 +268,7 @@ def decode_bms_vmu_failure(data: bytes) -> BmsVmuFailure:
         external_communication=bool(external_communication),
         safety_generic=bool(safety_generic),
     )
+
 
 def encode_bms_vmu_failure(msg: BmsVmuFailure) -> bytes:
     value = 0
@@ -354,4 +357,4 @@ def encode_bms_vmu_failure(msg: BmsVmuFailure) -> bytes:
     # SG_ Safety_Generic : 0|1@1- (1,0) [0|1] "" Vector__XXX
     value |= (int(msg.safety_generic) & 0x01) << 0
 
-    return value.to_bytes(BmsVmuFailure.NUM_BYTES, 'big')
+    return value.to_bytes(BmsVmuFailure.NUM_BYTES, "big")

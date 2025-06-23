@@ -9,10 +9,10 @@ from dataclasses import dataclass
 
 @dataclass
 class BmsVmuSpDrive:
-    MESSAGE_ID_DRIVE = 2566849310
+    MESSAGE_ID = 2566849310
+    NUM_BYTES = 4
     max_regen_current: float  # in A
     max_discharge_current: float  # in A
-    NUM_BYTES = 4
 
 
 def decode_drive(data: bytes) -> BmsVmuSpDrive:

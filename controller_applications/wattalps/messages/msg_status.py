@@ -1,5 +1,4 @@
 # -------------------- VMU_BMS_STATUS --------------------
-MESSAGE_ID_VMU_BMS_STATUS = 2180972544
 
 from dataclasses import dataclass
 
@@ -13,6 +12,7 @@ class VmuBmsStatus:
      SG_ AskMode : 0|2@1+ (1,0) [0|2] "" Vector__XXX
     """
 
+    MESSAGE_ID = 2180972544
     NUM_BYTES = 8
     bms_dest_addr: int
     insu_res_meas_en: bool
@@ -48,7 +48,6 @@ def encode_vmu_bms_status(msg: VmuBmsStatus) -> bytes:
 
 
 # -------------------- BMS_VMU_STATUS --------------------
-MESSAGE_ID_BMS_VMU_STATUS = 2566848798
 
 
 @dataclass
@@ -69,6 +68,8 @@ class BmsVmuStatus:
      SG_ Soc : 8|8@1+ (1,0) [0|100] "%" Vector__XXX
      SG_ Mode : 0|3@1+ (1,0) [0|7] "" Vector__XXX
     """
+
+    MESSAGE_ID = 2566848798
 
     NUM_BYTES = 4
     MODE_ERROR = 3
