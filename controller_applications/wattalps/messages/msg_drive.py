@@ -1,14 +1,14 @@
-"""
-BO_ 2566849310 BMS_VMU_SP_DRIVE: 4 Vector__XXX
- SG_ MaxRegenCurrent : 16|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
- SG_ MaxDischargeCurrent : 0|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
-"""
-
 from dataclasses import dataclass
 
 
 @dataclass
 class BmsVmuSpDrive:
+    """
+    BO_ 2566849310 BMS_VMU_SP_DRIVE: 4 Vector__XXX
+     SG_ MaxRegenCurrent : 16|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
+     SG_ MaxDischargeCurrent : 0|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
+    """
+
     MESSAGE_ID = 2566849310
     NUM_BYTES = 4
     max_regen_current: float  # in A

@@ -82,12 +82,38 @@ MESSAGE_DECODERS = {
     BmsVmuFailure.MESSAGE_ID: decode_bms_vmu_failure,
 }
 
+MESSAGE_ID_TO_CLASS = {
+    BmsVmuSpCharge.MESSAGE_ID: BmsVmuSpCharge,
+    BmsVmuConfVersion.MESSAGE_ID: BmsVmuConfVersion,
+    BmsVmuSpDrive.MESSAGE_ID: BmsVmuSpDrive,
+    BmsVmuSpDetail2s.MESSAGE_ID: BmsVmuSpDetail2s,
+    BmsVmuSpDetail5s.MESSAGE_ID: BmsVmuSpDetail5s,
+    BmsVmuSpDetail10s.MESSAGE_ID: BmsVmuSpDetail10s,
+    BmsVmuSpDetail30s.MESSAGE_ID: BmsVmuSpDetail30s,
+    BmsVmuSpDetail60s.MESSAGE_ID: BmsVmuSpDetail60s,
+    BmsVmuSpDetailRms1.MESSAGE_ID: BmsVmuSpDetailRms1,
+    BmsVmuSpDetailRms2.MESSAGE_ID: BmsVmuSpDetailRms2,
+    BmsVmuSpDetailRms3.MESSAGE_ID: BmsVmuSpDetailRms3,
+    BmsVmuSpDetailRms4.MESSAGE_ID: BmsVmuSpDetailRms4,
+    BmsVmuSpDetailRms5.MESSAGE_ID: BmsVmuSpDetailRms5,
+    BmsVmuStatus.MESSAGE_ID: BmsVmuStatus,
+    VmuBmsStatus.MESSAGE_ID: VmuBmsStatus,
+    BmsVmuInfo.MESSAGE_ID: BmsVmuInfo,
+    BmsVmuInfoCells.MESSAGE_ID: BmsVmuInfoCells,
+    BmsVmuInfoInsulation.MESSAGE_ID: BmsVmuInfoInsulation,
+    BmsVmuInfoJbTemperature.MESSAGE_ID: BmsVmuInfoJbTemperature,
+    BmsVmuInfoTemperature.MESSAGE_ID: BmsVmuInfoTemperature,
+    BmsVmuStats.MESSAGE_ID: BmsVmuStats,
+    BmsVmuFailure.MESSAGE_ID: BmsVmuFailure,
+}
+
 
 def decode_message_from_id(message_id: int, data: bytes):
     decode_fnc = MESSAGE_DECODERS.get(message_id, None)
     if decode_fnc is not None:
         try:
             data = decode_fnc(data)
+            return data
         except Exception as e:
             print(
                 f"An error occured trying to decode message id {message_id} with data:\n{data}"

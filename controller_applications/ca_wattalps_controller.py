@@ -1,8 +1,12 @@
 import can
 import logging
-from wattalps.decode_msg import decode_message_from_id
+from wattalps.decode_msg import (
+    MESSAGE_ID_TO_CLASS,
+    decode_message_from_id,
+    MESSAGE_DECODERS,
+)
 
-import struct
+import random
 
 from rich.console import Console
 from rich.table import Table
@@ -12,16 +16,21 @@ from rich.spinner import Spinner
 from rich.text import Text
 import time
 
+
 if __name__ == "__main__":
     import sys
+
+    TEST_MODE = True
 
     console = Console()
     logging.basicConfig(level=logging.INFO)
 
     # CAN bus setup
     try:
-        # bus = can.interface.Bus(channel="can0", bustype="socketcan", bitrate=500000)
-        print("Connecting to bus")
+        if not TEST_MODE:
+            bus = can.interface.Bus(channel="can0", bustype="socketcan", bitrate=500000)
+        else:
+            console.print("Connecting to bus")
     except Exception as e:
         console.print(f"[bold red]Failed to connect to CAN bus: {e}[/bold red]")
         sys.exit(1)
@@ -53,17 +62,28 @@ if __name__ == "__main__":
     with Live(spinner, refresh_per_second=10, console=console) as live:
         try:
             while True:
-                # msg = bus.recv(timeout=1.0)
-                msg = "Testing the TUI!"
+                if not TEST_MODE:
+                    msg = bus.recv(timeout=1.0)
+                else:
+                    msg = "Testing the TUI!"
+
                 if msg is None:
                     # No message, keep spinner
                     live.update(Spinner("dots", text="Waiting for CAN messages..."))
                     continue
 
-                # msg_id = msg.arbitration_id
-                # data = msg.data
-                msg_id = 123456
-                data = struct.pack("Q", 1234567)
+                if not TEST_MODE:
+                    msg_id = msg.arbitration_id
+                    data = msg.data
+                else:
+                    target_id = random.randint(0, len(MESSAGE_DECODERS) - 1)
+                    # print(f"Target id: {target_id}")
+                    msg_id = list(MESSAGE_DECODERS.keys())[target_id]
+                    # print(f"{msg_id=}")
+                    data = random.randbytes(MESSAGE_ID_TO_CLASS[msg_id].NUM_BYTES)
+                    # print(f"{data=}")
+                    console.print(f"DATA: {data}")
+                    time.sleep(1)
 
                 decoded = None
                 try:
