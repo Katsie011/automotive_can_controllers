@@ -6,19 +6,17 @@ from wattalps.decode_msg import (
     MESSAGE_DECODERS,
 )
 
-import random
-
-from rich.console import Console
-from rich.table import Table
-from rich.panel import Panel
-from rich.live import Live
-from rich.spinner import Spinner
-from rich.text import Text
-import time
-
 
 if __name__ == "__main__":
     import sys
+    import random
+
+    from rich.console import Console
+    from rich.table import Table
+    from rich.panel import Panel
+    from rich.live import Live
+    from rich.spinner import Spinner
+    import time
 
     TEST_MODE = True
 
@@ -73,8 +71,8 @@ if __name__ == "__main__":
                     continue
 
                 if not TEST_MODE:
-                    msg_id = msg.arbitration_id
-                    data = msg.data
+                    msg_id = msg.arbitration_id  # type: ignore
+                    data = msg.data  # type: ignore
                 else:
                     target_id = random.randint(0, len(MESSAGE_DECODERS) - 1)
                     # print(f"Target id: {target_id}")

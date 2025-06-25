@@ -77,7 +77,18 @@ class BmsVmuStatus:
     MODE_CHARGE = 1
     MODE_STANDBY = 0
 
+    """
+    Charge phase indication:
+- 0 : Not charging
+- 1 : Preconditioning
+- 2 : Standard Charge
+- 3 : Wait Balancing
+- 4 : Balancing
+- 5 : Complementary Charge
+- 6 : Charge Ended
+"""
     charge_phase: int
+
     is_thermal_forcing: bool
     is_cooling: bool
     is_pumping: bool
