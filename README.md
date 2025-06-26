@@ -50,5 +50,5 @@ Internally, this plugged into the another application that I wrote to act as a E
 
 This project is licensed under the [Creative Commons Attribution-NonCommercial 4.0 International License](https://creativecommons.org/licenses/by-nc/4.0/).  
 You may use, modify, and share this code for non-commercial purposes with attribution.  
-For commercial use, please contact [your email or your company].
+For commercial use, please contact me.
 
