@@ -23,6 +23,9 @@ if __name__ == "__main__":
     console = Console()
     logging.basicConfig(level=logging.INFO)
 
+    # TODO: Need to be able to change modes and send messages
+    # TODO how to change modes
+
     # CAN bus setup
     try:
         if not TEST_MODE:
