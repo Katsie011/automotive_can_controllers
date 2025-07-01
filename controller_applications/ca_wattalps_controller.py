@@ -35,7 +35,7 @@ if __name__ == "__main__":
     log_dir = "./logs"
     os.makedirs(log_dir, exist_ok=True)
     log_filename = os.path.join(
-        log_dir, f"can_log_{time.strftime('%Y%m%d_%H%M%S')}.csv"
+        log_dir, f"can_log_ca_wattalps_{time.strftime('%Y%m%d_%H%M%S')}.csv"
     )
 
     # Open the log file and set up CSV writer
