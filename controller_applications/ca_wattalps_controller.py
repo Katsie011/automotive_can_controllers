@@ -18,7 +18,7 @@ if __name__ == "__main__":
     from rich.spinner import Spinner
     import time
 
-    TEST_MODE = True
+    TEST_MODE = False
 
     console = Console()
     logging.basicConfig(level=logging.INFO)
