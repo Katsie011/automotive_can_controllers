@@ -6,10 +6,11 @@ from wattalps.decode_msg import (
     MESSAGE_DECODERS,
 )
 
-
 if __name__ == "__main__":
     import sys
     import random
+    import os
+    import csv
 
     from rich.console import Console
     from rich.table import Table
@@ -18,13 +19,30 @@ if __name__ == "__main__":
     from rich.spinner import Spinner
     import time
 
-    TEST_MODE = False
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Wattalps CAN Decoder")
+    parser.add_argument(
+        "--test", action="store_true", help="Enable test mode (simulate CAN messages)"
+    )
+    args = parser.parse_args()
+    TEST_MODE = args.test
 
     console = Console()
     logging.basicConfig(level=logging.INFO)
 
-    # TODO: Need to be able to change modes and send messages
-    # TODO how to change modes
+    # Ensure logs directory exists
+    log_dir = "./logs"
+    os.makedirs(log_dir, exist_ok=True)
+    log_filename = os.path.join(
+        log_dir, f"can_log_{time.strftime('%Y%m%d_%H%M%S')}.csv"
+    )
+
+    # Open the log file and set up CSV writer
+    log_file = open(log_filename, mode="w", newline="")
+    csv_writer = csv.writer(log_file)
+    # Write CSV header
+    csv_writer.writerow(["timestamp", "msg_id", "data_hex", "decoded"])
 
     # CAN bus setup
     try:
@@ -34,6 +52,7 @@ if __name__ == "__main__":
             console.print("Connecting to bus")
     except Exception as e:
         console.print(f"[bold red]Failed to connect to CAN bus: {e}[/bold red]")
+        log_file.close()
         sys.exit(1)
 
     console.print(
@@ -78,12 +97,9 @@ if __name__ == "__main__":
                     data = msg.data  # type: ignore
                 else:
                     target_id = random.randint(0, len(MESSAGE_DECODERS) - 1)
-                    # print(f"Target id: {target_id}")
                     msg_id = list(MESSAGE_DECODERS.keys())[target_id]
-                    # print(f"{msg_id=}")
                     data = random.randbytes(MESSAGE_ID_TO_CLASS[msg_id].NUM_BYTES)
-                    # print(f"{data=}")
-                    console.print(f"DATA: {data}")
+                    console.print(f"SIMULATED DATA: {data}")
                     time.sleep(1)
 
                 decoded = None
@@ -94,9 +110,22 @@ if __name__ == "__main__":
                 except Exception as e:
                     decoded = f"[bold red]Decode error:[/bold red] {e}"
 
-                decoded_messages.append((time.time(), msg_id, decoded))
+                # Log to CSV file
+                timestamp = time.time()
+                data_hex = data.hex() if hasattr(data, "hex") else str(data)
+                # For CSV, strip rich markup from decoded if present
+                if isinstance(decoded, str):
+                    decoded_csv = decoded
+                else:
+                    decoded_csv = str(decoded)
+                csv_writer.writerow([timestamp, f"0x{msg_id:X}", data_hex, decoded_csv])
+                log_file.flush()
+
+                decoded_messages.append((timestamp, msg_id, decoded))
                 live.update(render_table(decoded_messages))
         except KeyboardInterrupt:
             console.print("\n[bold yellow]Exiting CAN monitor. Goodbye![/bold yellow]")
         except Exception as e:
             console.print(f"[bold red]Unexpected error: {e}[/bold red]")
+        finally:
+            log_file.close()
