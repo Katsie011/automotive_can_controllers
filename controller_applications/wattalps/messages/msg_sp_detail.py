@@ -13,7 +13,7 @@ class BmsVmuSpDetail2s:
      SG_ ChargeMeasuredCurrent2s : 0|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
     """
 
-    MESSAGE_ID = 2566849566
+    MESSAGE_ID = 2566849566 - 0x80000000
     NUM_BYTES = 8
     discharge_alert_threshold_2s: float
     discharge_measured_current_2s: float
@@ -73,7 +73,7 @@ class BmsVmuSpDetail5s:
      SG_ ChargeMeasuredCurrent5s : 0|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
     """
 
-    MESSAGE_ID = 2566849822
+    MESSAGE_ID = 2566849822 - 0x80000000
     NUM_BYTES = 8
     discharge_alert_threshold_5s: float
     discharge_measured_current_5s: float
@@ -133,7 +133,7 @@ class BmsVmuSpDetail10s:
      SG_ ChargeMeasuredCurrent10s : 0|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
     """
 
-    MESSAGE_ID = 2566850078
+    MESSAGE_ID = 2566850078 - 0x80000000
     NUM_BYTES = 8
     discharge_alert_threshold_10s: float
     discharge_measured_current_10s: float
@@ -193,7 +193,7 @@ class BmsVmuSpDetail30s:
      SG_ ChargeMeasuredCurrent30s : 0|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
     """
 
-    MESSAGE_ID = 2566850334
+    MESSAGE_ID = 2566850334 - 0x80000000
     NUM_BYTES = 8
     discharge_alert_threshold_30s: float
     discharge_measured_current_30s: float
@@ -253,7 +253,7 @@ class BmsVmuSpDetail60s:
      SG_ ChargeMeasuredCurrent60s : 0|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
     """
 
-    MESSAGE_ID = 2566850590
+    MESSAGE_ID = 2566850590 - 0x80000000
     NUM_BYTES = 8
     discharge_alert_threshold_60s: float
     discharge_measured_current_60s: float

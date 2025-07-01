@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class VmuBmsForceCooling:
     """
@@ -10,7 +11,7 @@ class VmuBmsForceCooling:
     """
 
     # VMU_BMS_FORCE_COOLING
-    MESSAGE_ID_FORCE_COOLING = 2180976896
+    MESSAGE_ID_FORCE_COOLING = 2180976896 - 0x80000000
     NUM_BYTES = 8
     bms_dest_addr: int
     force_off: bool

@@ -12,7 +12,7 @@ class VmuBmsStatus:
      SG_ AskMode : 0|2@1+ (1,0) [0|2] "" Vector__XXX
     """
 
-    MESSAGE_ID = 2180972544
+    MESSAGE_ID = 2180972544 - 0x80000000
     NUM_BYTES = 8
     bms_dest_addr: int
     insu_res_meas_en: bool
@@ -69,7 +69,7 @@ class BmsVmuStatus:
      SG_ Mode : 0|3@1+ (1,0) [0|7] "" Vector__XXX
     """
 
-    MESSAGE_ID = 2566848798
+    MESSAGE_ID = 2566848798 - 0x80000000
 
     NUM_BYTES = 4
     MODE_ERROR = 3

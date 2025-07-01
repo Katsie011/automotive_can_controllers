@@ -13,7 +13,7 @@ class BmsVmuSpDetailRms1:
      SG_ RmsMeasuredCurrent2s : 0|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
     """
 
-    MESSAGE_ID = 2566850846
+    MESSAGE_ID = 2566850846 - 0x80000000
     NUM_BYTES = 8
     rms_alert_threshold_5s: float
     rms_measured_current_5s: float
@@ -73,7 +73,7 @@ class BmsVmuSpDetailRms2:
      SG_ RmsMeasuredCurrent10s : 0|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
     """
 
-    MESSAGE_ID = 2566851102
+    MESSAGE_ID = 2566851102 - 0x80000000
     NUM_BYTES = 8
     rms_alert_threshold_30s: float
     rms_measured_current_30s: float
@@ -133,7 +133,7 @@ class BmsVmuSpDetailRms3:
      SG_ RmsMeasuredCurrent60s : 0|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
     """
 
-    MESSAGE_ID = 2566851358
+    MESSAGE_ID = 2566851358 - 0x80000000
     NUM_BYTES = 8
     rms_alert_threshold_120s: float
     rms_measured_current_120s: float
@@ -193,7 +193,7 @@ class BmsVmuSpDetailRms4:
      SG_ RmsMeasuredCurrent240s : 0|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
     """
 
-    MESSAGE_ID = 2566851614
+    MESSAGE_ID = 2566851614 - 0x80000000
     NUM_BYTES = 8
     rms_alert_threshold_480s: float
     rms_measured_current_480s: float
@@ -251,7 +251,7 @@ class BmsVmuSpDetailRms5:
      SG_ RmsMeasuredCurrent900s : 0|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
     """
 
-    MESSAGE_ID = 2566851870
+    MESSAGE_ID = 2566851870 - 0x80000000
     NUM_BYTES = 4
     rms_alert_threshold_900s: float
     rms_measured_current_900s: float

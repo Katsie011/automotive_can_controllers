@@ -10,7 +10,7 @@ class VmuBmsForcePumping:
     """
 
     # VMU_BMS_FORCE_PUMPING
-    MESSAGE_ID_FORCE_PUMPING = 2180977152
+    MESSAGE_ID_FORCE_PUMPING = 2180977152 - 0x80000000
     NUM_BYTES = 8
     bms_dest_addr: int
     force_on: bool

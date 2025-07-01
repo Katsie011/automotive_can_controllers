@@ -11,7 +11,7 @@ class BmsVmuInfoCells:
     """
 
     # BMS_VMU_INFO_CELLS
-    MESSAGE_ID = 2566856990
+    MESSAGE_ID = 2566856990 - 0x80000000
     maximum_cell_voltage: int  # mV
     average_cell_voltage: int  # mV
     minimum_cell_voltage: int  # mV

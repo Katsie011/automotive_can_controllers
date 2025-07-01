@@ -11,7 +11,7 @@ class BmsVmuInfoTemperature:
     """
 
     # BMS_VMU_INFO_TEMPERATURE
-    MESSAGE_ID = 2566857246
+    MESSAGE_ID = 2566857246 - 0x80000000
     maximum_cell_temperature: int  # °C
     average_cell_temperature: int  # °C
     minimum_cell_temperature: int  # °C

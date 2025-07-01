@@ -9,7 +9,7 @@ class BmsVmuInfoInsulation:
     """
 
     # BMS_VMU_INFO_INSULATION
-    MESSAGE_ID = 2566857502
+    MESSAGE_ID = 2566857502 - 0x80000000
     NUM_BYTES = 4
     insulation_resistance: int  # kOhm
 

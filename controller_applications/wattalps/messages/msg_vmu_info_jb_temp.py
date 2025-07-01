@@ -12,7 +12,7 @@ class BmsVmuInfoJbTemperature:
     """
 
     # BMS_VMU_INFO_JB_TEMPERATURE
-    MESSAGE_ID = 2566857758
+    MESSAGE_ID = 2566857758 - 0x80000000
     junction_box_therm_temp_max: int  # °C
     junction_box_therm_temp_meas: int  # °C
     junction_box_shunt_temp_max: int  # °C

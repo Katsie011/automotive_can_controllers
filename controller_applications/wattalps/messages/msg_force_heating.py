@@ -10,7 +10,7 @@ class VmuBmsForceHeating:
      SG_ ForceOn : 0|1@1- (1,0) [0|1] "" Vector__XXX
     """
 
-    MESSAGE_ID_FORCE_HEATING = 2180976640
+    MESSAGE_ID_FORCE_HEATING = 2180976640 - 0x80000000
     NUM_BYTES = 8
     bms_dest_addr: int
     force_off: bool

@@ -10,7 +10,7 @@ class VmuBmsGenDataRecord1:
     """
 
     # VMU_BMS_GEN_DATA_RECORD_1
-    MESSAGE_ID_GEN_DATA_RECORD_1 = 2180980736
+    MESSAGE_ID_GEN_DATA_RECORD_1 = 2180980736 - 0x80000000
     NUM_BYTES = 8
     gen_record_value1: int
     gen_record_value2: int
@@ -46,7 +46,7 @@ class VmuBmsGenDataRecord2:
     """
 
     # VMU_BMS_GEN_DATA_RECORD_2
-    MESSAGE_ID_GEN_DATA_RECORD_2 = 2180980992
+    MESSAGE_ID_GEN_DATA_RECORD_2 = 2180980992 - 0x80000000
     NUM_BYTES = 8
     gen_record_value3: int
     gen_record_value4: int
@@ -82,7 +82,7 @@ class VmuBmsGenDataRecord3:
     """
 
     # VMU_BMS_GEN_DATA_RECORD_3
-    MESSAGE_ID_GEN_DATA_RECORD_3 = 2180981248
+    MESSAGE_ID_GEN_DATA_RECORD_3 = 2180981248 - 0x80000000
     NUM_BYTES = 8
     gen_record_value5: int
     gen_record_value6: int

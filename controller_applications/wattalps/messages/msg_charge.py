@@ -9,7 +9,7 @@ class BmsVmuSpCharge:
     SG_ ChargeVoltage : 0|16@1+ (0.1,0) [0|6553.5] "V" Vector__XXX
     """
 
-    MESSAGE_ID = 2566849054
+    MESSAGE_ID = 2566849054 - 0x80000000
     NUM_BYTES = 4
     max_charge_current: float  # A
     max_charge_voltage: float  # V

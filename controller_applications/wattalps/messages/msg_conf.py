@@ -15,7 +15,7 @@ class BmsVmuConfVersion:
     SG_ SafetyConfVerChar_0 : 0|8@1+ (1,0) [0|255] "" Vector__XXX
     """
 
-    MESSAGE_ID = 2566861598
+    MESSAGE_ID = 2566861598 - 0x80000000
     NUM_BYTES = 8
     appl_conf_ver_char_3: int
     appl_conf_ver_char_2: int

@@ -9,7 +9,7 @@ class BmsVmuSpDrive:
      SG_ MaxDischargeCurrent : 0|16@1+ (0.1,0) [0|6553.5] "A" Vector__XXX
     """
 
-    MESSAGE_ID = 2566849310
+    MESSAGE_ID = 2566849310 - 0x80000000
     NUM_BYTES = 4
     max_regen_current: float  # in A
     max_discharge_current: float  # in A

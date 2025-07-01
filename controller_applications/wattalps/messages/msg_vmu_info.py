@@ -12,7 +12,7 @@ class BmsVmuInfo:
     """
 
     # BMS_VMU_INFO
-    MESSAGE_ID = 2566856734
+    MESSAGE_ID = 2566856734 - 0x80000000
     soh: int  # %
     downstream_voltage: float  # V
     upstream_voltage: float  # V

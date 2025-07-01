@@ -49,7 +49,7 @@ class BmsVmuFailure:
      SG_ Safety_Generic : 0|1@1- (1,0) [0|1] "" Vector__XXX
     """
 
-    MESSAGE_ID = 2566852638
+    MESSAGE_ID = 2566852638 - 0x80000000
     NUM_BYTES = 8
     safety_reserved: int
     safety_appl_comm: bool
